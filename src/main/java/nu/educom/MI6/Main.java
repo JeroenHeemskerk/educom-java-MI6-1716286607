@@ -1,33 +1,43 @@
 package nu.educom.MI6;
-import java.util.Scanner;
+import javax.swing.*;
 
 public class Main {
   public static void main(String[] args) {
     boolean[] blacklist = new boolean[999];
     while (true) {
-      System.out.println("Welcome, id please:");
-      Scanner scanner = new Scanner(System.in);
-      StringBuilder agentInput = new StringBuilder(scanner.nextLine());
+      JFrame idFrame = new JFrame("MI6 id question");
 
-      while (agentInput.length() > 3 || !(agentInput.toString().matches("^[0-9]+$")) || Integer.parseInt(agentInput.toString()) > 956 || Integer.parseInt(agentInput.toString()) <= 0 || blacklist[Integer.parseInt(agentInput.toString())]) {
-        System.out.println("Invalid, try again:");
-        agentInput = new StringBuilder(scanner.nextLine());
+      // ondanks deze instelling, gaat het programma door als de popup gecanceld wordt
+      idFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+      // prompt the user to enter their id
+      String agentInput = JOptionPane.showInputDialog(idFrame, "Welcome, id please:",
+              "MI6 login",
+              JOptionPane.QUESTION_MESSAGE);
+
+      // order of conditions matters because of integer parsing
+      while (agentInput.length() > 3 || !(agentInput.matches("^[0-9]+$")) || Integer.parseInt(agentInput) > 956 || Integer.parseInt(agentInput) <= 0 || blacklist[Integer.parseInt(agentInput)]) {
+        agentInput = JOptionPane.showInputDialog(idFrame, "Invalid id, try again:",
+                "MI6 login",
+                JOptionPane.ERROR_MESSAGE);
       }
 
-      int agentId = Integer.parseInt(agentInput.toString());
-
-      while (agentInput.length() < 3) {
-        agentInput.insert(0, "0");
+      StringBuilder agentPadded = new StringBuilder(agentInput);
+      while (agentPadded.length() < 3) {
+        agentPadded.insert(0, "0");
       }
 
-      System.out.println("Hello there, " + agentInput);
-      StringBuilder agentPassphrase = new StringBuilder(scanner.nextLine());
-      if (!(agentPassphrase.toString().equals("For ThE Royal QUEEN"))) {
-        System.out.println("Sorry, " + agentInput + ", that is incorrect. You are now blacklisted.");
-        blacklist[agentId] = true;
+      JFrame phraseFrame = new JFrame("MI6 phrase question");
+      phraseFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+      String agentPassphrase = JOptionPane.showInputDialog(phraseFrame, "Hello there, " + agentPadded + ", please enter the passphrase: ", "MI6 login", JOptionPane.QUESTION_MESSAGE);
+      if (!(agentPassphrase.equals("For ThE Royal QUEEN"))) {
+        JOptionPane.showMessageDialog(null, "Sorry, " + agentPadded + ", that is incorrect. You are now blacklisted.", "Warning", JOptionPane.WARNING_MESSAGE);
+        blacklist[Integer.parseInt(agentInput)] = true;
       }
       else {
-        System.out.println("Welcome, " + agentInput + ", login successful.");
+        JOptionPane.showMessageDialog(null, "Welcome, " + agentPadded + ", login successful.", "Success", JOptionPane.INFORMATION_MESSAGE);
+        System.out.println();
       }
     }
 

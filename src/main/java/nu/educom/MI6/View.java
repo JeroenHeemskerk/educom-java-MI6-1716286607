@@ -3,6 +3,7 @@ package nu.educom.MI6;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class View {
     public static String createDialog(String frameName, String frameTitle, String frameLabel, String messageType) {
@@ -59,12 +60,29 @@ public class View {
         frame.add(phrasePanel);
         frame.add(submitBtn);
 
+        // add ActionListener to the submit button
+        submitBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String enteredId = idField.getText();
+                String enteredPassphrase = phraseField.getText();
+
+                if (!(nu.educom.MI6.Model.checkId(enteredId)) && enteredPassphrase.equals("For ThE Royal QUEEN")) {
+                    JOptionPane.showMessageDialog(frame, "Access Granted");
+                }
+                else {
+                    JOptionPane.showMessageDialog(frame, "Access DENIED", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
+
         // Settings for the frame
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
-        // ActionListener submit = new nu.educom.MI6.Model.checkId();
+
 
     }
 }

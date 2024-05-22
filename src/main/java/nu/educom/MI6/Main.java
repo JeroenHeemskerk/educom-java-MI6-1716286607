@@ -5,52 +5,39 @@ import javax.swing.*;
 public class Main {
   public static void main(String[] args) {
     while (true) {
-      // VIEW
-      JFrame idFrame = new JFrame("MI6 id question");
-      // ondanks deze instelling, gaat het programma door als de popup gecanceld wordt
-      idFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-      // VIEW
-      // prompt the agent to enter their id
-      String agentInput = JOptionPane.showInputDialog(idFrame, "Welcome, id please:",
-              "MI6 login",
-              JOptionPane.QUESTION_MESSAGE);
+      // Ik twijfel nog of deze functie te algemeen is. Misschien createIdquestionDialog() oid?
+      // create a dialog for the id
+      String agentInput = nu.educom.MI6.View.createDialog("Mi6 id question", "MI6 login", "Welcome, id please:", "question");
+      checkExit(agentInput);
 
       while (nu.educom.MI6.Model.checkId(agentInput)) {
-        agentInput = JOptionPane.showInputDialog(idFrame, "Invalid id, try again:",
-                "MI6 login",
-                JOptionPane.ERROR_MESSAGE);
+        agentInput = nu.educom.MI6.View.createDialog("Mi6 id question", "MI6 login", "Invalid id, try again:", "warning");
+        checkExit(agentInput);
       }
 
-      // VIEW
       // pad the id with 0s
-      StringBuilder agentPadded = new StringBuilder(agentInput);
-      while (agentPadded.length() < 3) {
-        agentPadded.insert(0, "0");
-      }
+      String agentPadded = nu.educom.MI6.View.padAgent(agentInput);
 
-      // VIEW
-      JFrame phraseFrame = new JFrame("MI6 phrase question");
-      phraseFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      // create a dialog for the passphrase
+      String agentPassphrase = nu.educom.MI6.View.createDialog("MI6 phrase question", "MI6 login", "Hello there, " + agentPadded + ", please enter the passphrase: ", "question");
+      checkExit(agentPassphrase);
 
-      // VIEW
-      // prompt the agent to enter the passphrase
-      String agentPassphrase = JOptionPane.showInputDialog(phraseFrame, "Hello there, " + agentPadded + ", please enter the passphrase: ", "MI6 login", JOptionPane.QUESTION_MESSAGE);
-
-      // CONTROLLER
       // blacklist agents that do not obey the queen
       if (!(agentPassphrase.equals("For ThE Royal QUEEN"))) {
-        // VIEW
         JOptionPane.showMessageDialog(null, "Sorry, " + agentPadded + ", that is incorrect. You are now blacklisted.", "Warning", JOptionPane.WARNING_MESSAGE);
-        // MODEL
         Model.setBlacklist(Integer.parseInt(agentInput));
       }
-
       // inform the user of successful login
       else {
-        // VIEW
         JOptionPane.showMessageDialog(null, "Welcome, " + agentPadded + ", login successful.", "Success", JOptionPane.INFORMATION_MESSAGE);
       }
+    }
+  }
+
+  static void checkExit(String input) {
+    // exit when input is null
+    if (input == null) {
+      System.exit(0);
     }
   }
 }

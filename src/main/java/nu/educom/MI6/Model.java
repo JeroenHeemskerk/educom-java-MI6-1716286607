@@ -1,7 +1,5 @@
 package nu.educom.MI6;
 
-import javax.swing.*;
-
 public class Model {
     public static boolean[] blacklist = new boolean[999];
 

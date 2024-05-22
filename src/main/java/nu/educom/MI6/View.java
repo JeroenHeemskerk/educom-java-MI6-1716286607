@@ -1,6 +1,8 @@
 package nu.educom.MI6;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionListener;
 
 public class View {
     public static String createDialog(String frameName, String frameTitle, String frameLabel, String messageType) {
@@ -30,5 +32,39 @@ public class View {
             agentPadded.insert(0, "0");
         }
         return agentPadded.toString();
+    }
+
+    public static void createLoginDialog() {
+        JFrame frame = new JFrame("MI6 login");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setPreferredSize(new java.awt.Dimension(250, 250));
+        frame.setVisible(true);
+
+        JPanel idPanel = new JPanel(new GridLayout(2, 1, 10, 10));
+        JPanel phrasePanel = new JPanel(new GridLayout(2, 1, 10, 10));
+
+        JLabel idLabel = new JLabel("ID: ");
+        JLabel phraseLabel = new JLabel("Passphrase: ");
+        JTextField idField = new JTextField("");
+        JTextField phraseField = new JTextField("");
+
+        JButton submitBtn = new JButton("Login");
+
+        frame.setLayout(new GridLayout(3, 1, 10, 10));
+        idPanel.add(idLabel);
+        idPanel.add(idField);
+        frame.add(idPanel);
+        phrasePanel.add(phraseLabel);
+        phrasePanel.add(phraseField);
+        frame.add(phrasePanel);
+        frame.add(submitBtn);
+
+        // Settings for the frame
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+        // ActionListener submit = new nu.educom.MI6.Model.checkId();
+
     }
 }

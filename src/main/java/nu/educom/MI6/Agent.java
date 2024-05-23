@@ -1,68 +1,47 @@
 package nu.educom.MI6;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.time.LocalDate;
 
 public class Agent {
-    public static boolean getLicenceByServiceId(int serviceId) {
-        String query = "SELECT licence_to_kill FROM agents WHERE service_id = ?";
-        try (var connection =  MySQLConnection.connect()) {
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
+    public int id;
+    public int serviceId;
+    public boolean retired;
+    public boolean licence;
+    public LocalDate licenceValid;
+    public String passphrase;
 
-            // Set the parameters for the query
-            preparedStatement.setInt(1, serviceId);
-
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                resultSet.next();
-                return resultSet.getBoolean("licence_to_kill");
-            }
-        }
-        catch (SQLException e) {
-            System.err.println(e.getMessage());
-            // onzeker over welke default ik moet returnen in geval van error
-            return false;
-        }
+    public Agent(int id, int serviceId, boolean retired, boolean licence, LocalDate licenceValid, String passphrase) {
+        this.id = id;
+        this.serviceId = serviceId;
+        this.retired = retired;
+        this.licence = licence;
+        this.licenceValid = licenceValid;
+        this.passphrase = passphrase;
     }
 
-    public static java.sql.Date getLicenceDateByServiceId(int serviceId) {
-        String query = "SELECT licence_valid FROM agents WHERE service_id = ?";
-        try (var connection =  MySQLConnection.connect()) {
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-
-            // Set the parameters for the query
-            preparedStatement.setInt(1, serviceId);
-
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                resultSet.next();
-                return resultSet.getDate("licence_valid");
-            }
-        }
-        catch (SQLException e) {
-            System.err.println(e.getMessage());
-            // onzeker over welke default ik moet returnen in geval van error
-            return null;
-        }
+    public int getServiceId() {
+        return serviceId;
     }
 
-    public static boolean getRetiredByServiceId(int serviceId) {
-        String query = "SELECT retired FROM agents WHERE service_id = ?";
-        try (var connection =  MySQLConnection.connect()) {
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
+    public boolean getRetired() {
+        return this.retired;
+    }
 
-            // Set the parameters for the query
-            preparedStatement.setInt(1, serviceId);
+    public boolean getLicence() {
+        return this.licence;
+    }
 
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                resultSet.next();
-                return resultSet.getBoolean("retired");
-            }
-        }
-        catch (SQLException e) {
-            System.err.println(e.getMessage());
-            // onzeker over welke default ik moet returnen in geval van error
-            return false;
-        }
+    public LocalDate getLicenceValid() {
+        return this.licenceValid;
+    }
+
+    @Override
+    public String toString() {
+        return "Agent{" +
+                "serviceId=" + serviceId +
+                ", licenceToKill=" + licence +
+                ", licenceValid=" + licenceValid +
+                ", retired=" + retired + '\'' +
+                '}';
     }
 }

@@ -11,4 +11,8 @@ public class Model {
     public static void setBlacklist(int agentId) {
         blacklist[agentId] = true;
     }
+
+    public static boolean checkLogin(String enteredId, String enteredPassphrase) {
+        return !(checkId(enteredId)) && enteredPassphrase.equals("For ThE Royal QUEEN");
+    }
 }

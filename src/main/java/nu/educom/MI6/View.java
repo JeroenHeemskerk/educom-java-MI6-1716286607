@@ -67,7 +67,7 @@ public class View {
                 String enteredId = idField.getText();
                 String enteredPassphrase = new String(phraseField.getPassword());
 
-                if (!(nu.educom.MI6.Model.checkId(enteredId)) && enteredPassphrase.equals("For ThE Royal QUEEN")) {
+                if (nu.educom.MI6.Model.checkLogin(enteredId, enteredPassphrase)) {
                     JOptionPane.showMessageDialog(frame, "Access Granted");
                     idField.setText("");
                     phraseField.setText("");

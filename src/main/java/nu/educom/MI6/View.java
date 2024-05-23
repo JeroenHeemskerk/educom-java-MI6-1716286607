@@ -47,7 +47,7 @@ public class View {
         JLabel idLabel = new JLabel("ID: ");
         JLabel phraseLabel = new JLabel("Passphrase: ");
         JTextField idField = new JTextField("");
-        JTextField phraseField = new JTextField("");
+        JPasswordField phraseField = new JPasswordField("");
 
         JButton submitBtn = new JButton("Login");
 
@@ -65,10 +65,12 @@ public class View {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String enteredId = idField.getText();
-                String enteredPassphrase = phraseField.getText();
+                String enteredPassphrase = new String(phraseField.getPassword());
 
                 if (!(nu.educom.MI6.Model.checkId(enteredId)) && enteredPassphrase.equals("For ThE Royal QUEEN")) {
                     JOptionPane.showMessageDialog(frame, "Access Granted");
+                    idField.setText("");
+                    phraseField.setText("");
                 }
                 else {
                     JOptionPane.showMessageDialog(frame, "Access DENIED", "Error", JOptionPane.ERROR_MESSAGE);

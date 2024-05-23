@@ -64,10 +64,10 @@ public class View {
         submitBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String enteredId = idField.getText();
+                int enteredId = Integer.parseInt(idField.getText());
                 String enteredPassphrase = new String(phraseField.getPassword());
 
-                if (nu.educom.MI6.Model.checkLogin(enteredId, enteredPassphrase)) {
+                if (nu.educom.MI6.Database.authenticateLogin(enteredId, enteredPassphrase)) {
                     JOptionPane.showMessageDialog(frame, "Access Granted");
                     idField.setText("");
                     phraseField.setText("");

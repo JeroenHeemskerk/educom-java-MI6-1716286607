@@ -8,7 +8,7 @@ public class Agent {
     public boolean retired;
     public boolean licence;
     public LocalDate licenceValid;
-    public String passphrase;
+    private String passphrase;
 
     public Agent(int id, int serviceId, boolean retired, boolean licence, LocalDate licenceValid, String passphrase) {
         this.id = id;
@@ -33,6 +33,10 @@ public class Agent {
 
     public LocalDate getLicenceValid() {
         return this.licenceValid;
+    }
+
+    public String getPassphrase() {
+        return this.passphrase;
     }
 
     @Override

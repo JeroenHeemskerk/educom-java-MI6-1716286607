@@ -4,7 +4,6 @@ import javax.swing.*;
 // Main class is the controller
 public class Main {
   public static void main(String[] args) {
-    System.out.println(nu.educom.MI6.Database.getAgentByServiceId(30));
     nu.educom.MI6.View.createLoginDialog();
 //    while () {
 //      // Ik twijfel nog of deze functie te algemeen is. Misschien createIdquestionDialog() oid?

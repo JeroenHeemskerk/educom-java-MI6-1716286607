@@ -4,6 +4,10 @@ import javax.swing.*;
 // Main class is the controller
 public class Main {
   public static void main(String[] args) {
+    System.out.println(nu.educom.MI6.Agent.getLicenceByServiceId(7));
+    System.out.println(nu.educom.MI6.Agent.getLicenceDateByServiceId(7));
+    System.out.println(nu.educom.MI6.Agent.getRetiredByServiceId(7));
+    System.out.println(nu.educom.MI6.Agent.getRetiredByServiceId(777));
     nu.educom.MI6.View.createLoginDialog();
 //    while () {
 //      // Ik twijfel nog of deze functie te algemeen is. Misschien createIdquestionDialog() oid?

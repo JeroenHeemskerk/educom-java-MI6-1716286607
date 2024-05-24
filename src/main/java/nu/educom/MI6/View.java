@@ -108,7 +108,12 @@ public class View {
                         Agent agent = nu.educom.MI6.Database.readAgentByServiceId(enteredId);
                         boolean licence = agent.getLicence();
                         LocalDate expirationDate = agent.getLicenceValid();
-                        JOptionPane.showMessageDialog(frame, "Access Granted");
+                        if (licence) {
+                            JOptionPane.showMessageDialog(frame, "Access Granted. Your licence expires on: " + expirationDate);
+                        } else {
+                            JOptionPane.showMessageDialog(frame, "Access Granted. ");
+                        }
+
                         idField.setText("");
                         phraseField.setText("");
                     } else {

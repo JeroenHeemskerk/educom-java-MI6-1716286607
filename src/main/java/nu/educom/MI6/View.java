@@ -64,15 +64,20 @@ public class View {
         submitBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int enteredId = Integer.parseInt(idField.getText());
-                String enteredPassphrase = new String(phraseField.getPassword());
+                if (!nu.educom.MI6.Model.checkId(idField.getText())) {
+                    int enteredId = Integer.parseInt(idField.getText());
+                    String enteredPassphrase = new String(phraseField.getPassword());
 
-                if (nu.educom.MI6.Database.authenticateLogin(enteredId, enteredPassphrase)) {
-                    JOptionPane.showMessageDialog(frame, "Access Granted");
-                    idField.setText("");
-                    phraseField.setText("");
-                }
-                else {
+                    if (nu.educom.MI6.Database.authenticateLogin(enteredId, enteredPassphrase)) {
+                        // moet een tabel worden met inlogpogingen
+                        JOptionPane.showMessageDialog(frame, "Access Granted");
+                        idField.setText("");
+                        phraseField.setText("");
+                    } else {
+                        // moet een bericht worden met eerst mogelijke tijd voor inloggen
+                        JOptionPane.showMessageDialog(frame, "Access DENIED", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                } else {
                     JOptionPane.showMessageDialog(frame, "Access DENIED", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }

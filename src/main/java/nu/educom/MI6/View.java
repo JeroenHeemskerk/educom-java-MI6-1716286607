@@ -1,9 +1,13 @@
 package nu.educom.MI6;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 public class View {
     public static String createDialog(String frameName, String frameTitle, String frameLabel, String messageType) {
@@ -69,13 +73,48 @@ public class View {
                     String enteredPassphrase = new String(phraseField.getPassword());
 
                     if (nu.educom.MI6.Database.authenticateLogin(enteredId, enteredPassphrase)) {
-                        // moet een tabel worden met inlogpogingen
+                        // get table with loginattempts
+                        ArrayList<LoginAttempt> loginAttempts = nu.educom.MI6.Database.getLastLoginAttempts(enteredId);
+                        nu.educom.MI6.Database.createLoginAttempt(enteredId, true);
+                        loginAttempts.add(nu.educom.MI6.Database.getLastLoginAttempt(enteredId));
+
+                        // make JPanel iteratively
+                        // create column names for JTable
+                        String[] columnNames = {"Date", "Time", "Success"};
+
+                        // create data array for JTable
+                        Object[][] data = new Object[loginAttempts.size()][3];
+                        for (int i = 0; i < loginAttempts.size(); i++) {
+                            LoginAttempt attempt = loginAttempts.get(i);
+                            data[i][0] = attempt.getLoginStamp().toLocalDate();
+                            data[i][1] = attempt.getLoginStamp().toLocalTime();
+                            data[i][2] = attempt.getLoginSuccess();
+                        }
+
+                        // create table model and JTable
+                        DefaultTableModel tableModel = new DefaultTableModel(data, columnNames);
+                        JTable table = new JTable(tableModel);
+                        JScrollPane scrollPane = new JScrollPane(table);
+
+                        // create a new dialog to display login attempts
+                        JDialog attemptsDialog = new JDialog(frame, "Login Attempts", true);
+                        attemptsDialog.add(scrollPane);
+                        attemptsDialog.setSize(400, 300);
+                        attemptsDialog.setLocationRelativeTo(frame);
+                        attemptsDialog.setVisible(true);
+
+
+                        // get agent licence information
+                        Agent agent = nu.educom.MI6.Database.readAgentByServiceId(enteredId);
+                        boolean licence = agent.getLicence();
+                        LocalDate expirationDate = agent.getLicenceValid();
                         JOptionPane.showMessageDialog(frame, "Access Granted");
                         idField.setText("");
                         phraseField.setText("");
                     } else {
-                        // moet een bericht worden met eerst mogelijke tijd voor inloggen
-                        JOptionPane.showMessageDialog(frame, "Access DENIED", "Error", JOptionPane.ERROR_MESSAGE);
+                        // get first available login time
+                        LocalDateTime loginTime = nu.educom.MI6.Database.getFirstAvailableLoginMoment(enteredId);
+                        JOptionPane.showMessageDialog(frame, "Access DENIED. Locked out until: " + loginTime, "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 } else {
                     JOptionPane.showMessageDialog(frame, "Access DENIED", "Error", JOptionPane.ERROR_MESSAGE);

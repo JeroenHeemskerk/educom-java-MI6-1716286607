@@ -48,31 +48,26 @@ public class Database {
         }
     }
 
+    public static LocalDateTime getFirstAvailableLoginMoment(int agentId) {
+        ArrayList<LoginAttempt> lastFailedLogins = getLastLoginAttempts(agentId);
+        int consecutiveFails = lastFailedLogins.size() - 1;
+        // get the last login timestamp and add the lockout time
+        return lastFailedLogins.get(consecutiveFails).getLoginStamp().plusMinutes((long) Math.pow(2, consecutiveFails));
+    }
+
     public static boolean authenticateLogin(int agentId, String passphrase) {
         Agent agent = readAgentByServiceId(agentId);
 
         if (isDenied(agentId)) {
             System.out.println("denied");
-            System.out.println(getLastLoginAttempt(agentId));
             return false;
         }
         else if (agent == null || !passphrase.equals(agent.getPassphrase()) || agent.getRetired()) {
             System.out.println("incorrect");
             createLoginAttempt(agentId, false);
-            ArrayList<LoginAttempt> lastFailedLogins = getLastLoginAttempts(agentId);
-            System.out.println(lastFailedLogins);
-            int consecutiveFails = lastFailedLogins.size() - 1;
-            System.out.println(lastFailedLogins.get(consecutiveFails).getLoginStamp().plusMinutes((long) Math.pow(2, consecutiveFails)));
             return false;
         }
         else {
-            System.out.println("correct");
-            ArrayList<LoginAttempt> lastFailedLogins = getLastLoginAttempts(agentId);
-            createLoginAttempt(agentId, true);
-            lastFailedLogins.add(getLastLoginAttempt(agentId));
-            System.out.println(lastFailedLogins);
-            boolean licence = agent.getLicence();
-            LocalDate expirationDate = agent.getLicenceValid();
             return true;
         }
     }

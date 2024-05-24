@@ -7,12 +7,4 @@ public class Model {
     public static boolean checkId(String agentInput) {
         return agentInput.length() > 3 || !agentInput.matches("^[0-9]+$") || Integer.parseInt(agentInput) > 956 || Integer.parseInt(agentInput) <= 0 || blacklist[Integer.parseInt(agentInput)];
     }
-
-    public static void setBlacklist(int agentId) {
-        blacklist[agentId] = true;
-    }
-
-    public static boolean checkLogin(String enteredId, String enteredPassphrase) {
-        return !(checkId(enteredId)) && enteredPassphrase.equals("For ThE Royal QUEEN");
-    }
 }

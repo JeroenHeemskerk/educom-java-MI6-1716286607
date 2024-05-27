@@ -29,3 +29,7 @@ hs_err_pid*
 **/.idea/*.iws
 **/.idea/vcs.xml
 **/.idea/tasks.xml
+
+# public keys
+.ssh
+.properties

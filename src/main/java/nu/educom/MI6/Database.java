@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.lang.Math;
 
 public class Database {
     public static Agent readAgentByServiceId(int serviceId) {
@@ -45,28 +44,6 @@ public class Database {
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             System.err.println(e.getMessage());
-        }
-    }
-
-    public static LocalDateTime getFirstAvailableLoginMoment(int agentId) {
-        ArrayList<LoginAttempt> lastFailedLogins = getLastLoginAttempts(agentId);
-        int consecutiveFails = lastFailedLogins.size() - 1;
-        // get the last login timestamp and add the lockout time
-        return lastFailedLogins.get(consecutiveFails).getLoginStamp().plusMinutes((long) Math.pow(2, consecutiveFails));
-    }
-
-    public static boolean authenticateLogin(int agentId, String passphrase) {
-        Agent agent = readAgentByServiceId(agentId);
-
-        if (isDenied(agentId)) {
-            return false;
-        }
-        else if (agent == null || !passphrase.equals(agent.getPassphrase()) || agent.getRetired()) {
-            createLoginAttempt(agentId, false);
-            return false;
-        }
-        else {
-            return true;
         }
     }
 
@@ -121,15 +98,5 @@ public class Database {
             System.err.println(e.getMessage());
         }
         return null; // Return null if no agent is found or an error occurs
-    }
-    public static boolean isDenied(int agentId) {
-        ArrayList<LoginAttempt> lastFailedLogins = getLastLoginAttempts(agentId);
-        int consecutiveFails = lastFailedLogins.size() - 1;
-        // if the last login attempt was successful or has never logged in, agent is not denied
-        if (consecutiveFails == -1 || lastFailedLogins.get(consecutiveFails).getLoginSuccess()) {
-            return false;
-        }
-        // if last login attempt was unsuccessful, check if enough time has passed
-        return !LocalDateTime.now().isAfter(lastFailedLogins.get(consecutiveFails).getLoginStamp().plusMinutes((long) Math.pow(2, consecutiveFails)));
     }
 }

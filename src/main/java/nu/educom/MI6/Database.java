@@ -37,7 +37,7 @@ public class Database {
         String query = "INSERT INTO login_attempts (service_id, success) VALUES (?, ?)";
 
         try (Connection connection = MySQLConnection.connect();
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
             preparedStatement.setInt(1, serviceId);
             preparedStatement.setBoolean(2, success);
@@ -59,11 +59,9 @@ public class Database {
         Agent agent = readAgentByServiceId(agentId);
 
         if (isDenied(agentId)) {
-            System.out.println("denied");
             return false;
         }
         else if (agent == null || !passphrase.equals(agent.getPassphrase()) || agent.getRetired()) {
-            System.out.println("incorrect");
             createLoginAttempt(agentId, false);
             return false;
         }

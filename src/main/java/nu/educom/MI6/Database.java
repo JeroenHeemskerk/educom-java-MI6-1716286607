@@ -47,7 +47,7 @@ public class Database {
         }
     }
 
-    public static ArrayList<LoginAttempt> getLastLoginAttempts(int agentId) {
+    public static ArrayList<LoginAttempt> readLastLoginAttempts(int agentId) {
         ArrayList<LoginAttempt> attempts = new ArrayList<>();
 
         try (Connection connection = MySQLConnection.connect();
@@ -75,7 +75,7 @@ public class Database {
         return attempts;
     }
 
-    public static LoginAttempt getLastLoginAttempt(int agentId) {
+    public static LoginAttempt readLastLoginAttempt(int agentId) {
         String query = "SELECT * FROM login_attempts WHERE service_id = ? ORDER BY id DESC LIMIT 1";
 
         try (Connection connection = MySQLConnection.connect();

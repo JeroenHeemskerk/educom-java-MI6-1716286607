@@ -11,18 +11,17 @@ public class Model {
 
     public Model(int enteredId) {
         this.agentId = enteredId;
-        this.loginAttempts = nu.educom.MI6.Database.getLastLoginAttempts(enteredId);
+        this.loginAttempts = nu.educom.MI6.Database.readLastLoginAttempts(enteredId);
     }
 
     public boolean isDenied() {
-        ArrayList<LoginAttempt> lastFailedLogins = nu.educom.MI6.Database.getLastLoginAttempts(agentId);
-        int consecutiveFails = lastFailedLogins.size() - 1;
+        int consecutiveFails = loginAttempts.size() - 1;
         // if the last login attempt was successful or has never logged in, agent is not denied
-        if (consecutiveFails == -1 || lastFailedLogins.get(consecutiveFails).getLoginSuccess()) {
+        if (consecutiveFails == -1 || loginAttempts.get(consecutiveFails).getLoginSuccess()) {
             return false;
         }
         // if last login attempt was unsuccessful, check if enough time has passed
-        return !LocalDateTime.now().isAfter(lastFailedLogins.get(consecutiveFails).getLoginStamp().plusMinutes((long) Math.pow(2, consecutiveFails)));
+        return !LocalDateTime.now().isAfter(loginAttempts.get(consecutiveFails).getLoginStamp().plusMinutes((long) Math.pow(2, consecutiveFails)));
     }
 
     public Agent authenticateLogin(String passphrase) {
@@ -33,12 +32,12 @@ public class Model {
         }
         else if (agent == null || !passphrase.equals(agent.getPassphrase()) || agent.getRetired()) {
             nu.educom.MI6.Database.createLoginAttempt(agentId, false);
-            loginAttempts.add(nu.educom.MI6.Database.getLastLoginAttempt(agentId));
+            loginAttempts.add(nu.educom.MI6.Database.readLastLoginAttempt(agentId));
             return null;
         }
         else {
             nu.educom.MI6.Database.createLoginAttempt(agentId, true);
-            loginAttempts.add(nu.educom.MI6.Database.getLastLoginAttempt(agentId));
+            loginAttempts.add(nu.educom.MI6.Database.readLastLoginAttempt(agentId));
             return agent;
         }
     }
